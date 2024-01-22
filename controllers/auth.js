@@ -1,7 +1,8 @@
 const User = require('../models/User');
 const CustomError = require('../helpers/error/customError');
 const asyncErrorWrapper = require('express-async-handler');
-const {sendJwtToClient} = require('../helpers/authorization/tokenHelpers');
+const { sendJwtToClient } = require('../helpers/authorization/tokenHelpers');
+const { validateUserInput, comparePassword } = require('../helpers/input/inputHelpers');
 const register = asyncErrorWrapper(async (req, res, next) => {
 
     const { firstName, lastName, username , email, password, role } = req.body;
@@ -17,15 +18,32 @@ const register = asyncErrorWrapper(async (req, res, next) => {
     sendJwtToClient(user, res)
 });
 
+const login = asyncErrorWrapper(async (req, res, next) => {
+    const { email, password } = req.body;
+    if(!validateUserInput(email, password)){
+        return next(new CustomError("Lütfen gönderdiğiniz bilgileri kontrol ediniz", 400))
+    }
 
-const tokenTest = (req, res, next) => {
+    const user = await User.findOne({email}).select("+password");
+    if(!comparePassword(password, user.password)){
+        return next(new CustomError("Bilgiler hatalı, lütfen kontrol ediniz", 400))
+    }
+    sendJwtToClient(user, res);
+});
+
+const getUser = (req, res, next) => {
     res.json({
         success: true,
-        message: "Hoşgeldin"
+        data: {
+            id: req.user.id,
+            email: req.user.email,
+        }
     })
 }
 
+
 module.exports = {
     register,
-    tokenTest,
+    getUser,
+    login,
 }
