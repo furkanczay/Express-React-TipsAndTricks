@@ -53,10 +53,26 @@ const getUser = (req, res, next) => {
     })
 }
 
+const imageUpload = asyncErrorWrapper(async (req, res, next) => {
+    const user = await User.findByIdAndUpdate(req.user.id, {
+        profileImage: req.savedProfileImage
+    }, {
+        new: true,
+        runValidators: true
+    })
+
+    res.status(200).json({
+        success: true,
+        message: "Resim başarıyla yüklendi",
+        data: user
+    })
+});
+
 
 module.exports = {
     register,
     getUser,
     login,
     logout,
+    imageUpload,
 }

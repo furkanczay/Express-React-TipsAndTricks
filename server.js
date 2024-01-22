@@ -24,6 +24,8 @@ app.use("/api", routes);
 // Error Handling
 app.use(customErrorHandler);
 
+// Static Files Middleware
+app.use(express.static(path.join(__dirname, process.env.STATIC_FILES_FOLDER)));
 
 app.listen(PORT, () => {
     console.log(`Example app listening on port ${PORT} : ${process.env.NODE_ENV}`);
