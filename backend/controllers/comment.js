@@ -44,6 +44,19 @@ const getSingleComment = asyncErrorWrapper(async (req,res,next) => {
             success: true,
             data: comment
       })
+});
+
+const editComment = asyncErrorWrapper(async (req,res,next) => {
+      const { comment_id } = req.params;
+      const { content } = req.body;
+      let comment = await Comment.findById(comment_id);
+      comment.content = content;
+      await comment.save();
+      return res.status(200).json({
+            success: true,
+            message: "Yorum başarıyla güncellendi",
+            data: comment
+      })
 })
 
 
@@ -51,5 +64,6 @@ const getSingleComment = asyncErrorWrapper(async (req,res,next) => {
 module.exports = {
       addNewCommentToArticle,
       getAllCommentsByArticle,
-      getSingleComment
+      getSingleComment,
+      editComment
 }
