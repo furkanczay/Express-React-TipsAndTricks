@@ -6,14 +6,13 @@ const { validateUserInput, comparePassword } = require('../helpers/input/inputHe
 const sendEmail = require("../helpers/libs/sendEmail");
 const register = asyncErrorWrapper(async (req, res, next) => {
 
-    const { firstName, lastName, username , email, password, role } = req.body;
+    const { firstName, lastName, username , email, password } = req.body;
     const user = await User.create({
         firstName,
         lastName,
         username,
         email,
         password,
-        role
     });
 
     sendJwtToClient(user, res)
