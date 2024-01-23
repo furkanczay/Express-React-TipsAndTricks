@@ -102,10 +102,37 @@ const forgotPassword = asyncErrorWrapper(async (req, res, next) => {
         user.resetPasswordExpire = undefined;
         await user.save();
         return next(new CustomError("E-posta gönderimi esnasında hata oluştu", 500))
+    }  
+});
+
+const resetPassword = asyncErrorWrapper(async (req, res, next) => {
+    const { resetPasswordToken } = req.query;
+
+    const { newPassword } = req.body;
+
+    if(!resetPasswordToken) {
+        return next(new CustomError("Lütfen geçerli bir şifre yenileme anahtarı gönderiniz", 400));
     }
 
-    
-    
+    let user = await User.findOne({
+        resetPasswordToken,
+        resetPasswordExpire: { $gt: Date.now() }
+    });
+
+    if(!user){
+        return next(new CustomError("Geçersiz şifre yenileme bağlantısı", 400))
+    }
+
+    user.password = newPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    await user.save();
+
+    return res.status(200).json({
+        success: true,
+        message: "Şifre sıfırlama işlemi başarılı"
+    })
 });
 
 
@@ -115,5 +142,6 @@ module.exports = {
     login,
     logout,
     imageUpload,
-    forgotPassword
+    forgotPassword,
+    resetPassword
 }
