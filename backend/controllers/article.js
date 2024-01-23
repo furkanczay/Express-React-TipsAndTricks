@@ -10,6 +10,14 @@ const getAllArticles = asyncErrorWrapper(async (req,res,next) => {
     })
 })
 
+const getSingleArticle = asyncErrorWrapper(async (req,res,next) => {
+    const article = req.dataArticle;
+    return res.status(200).json({
+        success: true,
+        data: article
+    })
+})
+
 const newArticle = asyncErrorWrapper(async (req,res,next) => {
     const information = req.body;
     const article = await Article.create({
@@ -27,5 +35,6 @@ const newArticle = asyncErrorWrapper(async (req,res,next) => {
 
 module.exports = {
     getAllArticles,
-    newArticle
+    newArticle,
+    getSingleArticle
 }
