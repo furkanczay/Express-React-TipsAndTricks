@@ -17,7 +17,7 @@ const blockUser = asyncErrorWrapper(async (req,res,next) => {
 
 const deleteUser = asyncErrorWrapper(async (req,res,next) => {
       const { id } = req.params;
-      await User.findByIdAndDelete(id);
+      await User.deleteOne({_id: id});
       return res.status(200).json({
             success: true,
             message: "Kullanıcı başarıyla silindi"

@@ -2,9 +2,6 @@
   "name": "tipsandtricks",
   "version": "1.0.0",
   "description": "",
-  "prisma": {
-    "schema": "database/models/schema.prisma"
-  },
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

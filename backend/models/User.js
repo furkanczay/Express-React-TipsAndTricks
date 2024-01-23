@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+const Article = require("./Article");
 
 const Schema = mongoose.Schema;
 
@@ -113,6 +114,13 @@ UserSchema.pre("save", function(next){
             next();
         });
     });
-})
+});
+
+UserSchema.pre('deleteOne', { document: false, query: true }, async function() {
+    const doc = await this.model.findOne(this.getFilter());
+    await Article.deleteMany({
+        author: doc._id
+    });
+});
 
 module.exports = mongoose.model("User", UserSchema);
