@@ -1,6 +1,7 @@
 const CustomError = require('../../helpers/error/CustomError');
 const asyncErrorWrapper = require("express-async-handler");
 const User = require("../../models/User");
+const Article = require("../../models/Article");
 const jwt = require('jsonwebtoken');
 const { isTokenIncluded, getAccessTokenFromHeader } = require("../../helpers/authorization/tokenHelpers");
 
@@ -34,7 +35,20 @@ const getAdminAccess = asyncErrorWrapper(async (req,res,next) => {
       next();
 });
 
+const getArticleOwnerAccess = asyncErrorWrapper(async (req,res,next) => {
+      const userId = req.user.id;
+      const articleId = req.params.id;
+
+      const article = await Article.findById(articleId);
+
+      if(article.user !== userId){
+            return next(new CustomError("Yalnızca yazının sahibi yazıyı düzenleyebilir", 403));
+      }
+      next();
+})
+
 module.exports = {
       getAccessToRoute,
-      getAdminAccess
+      getAdminAccess,
+      getArticleOwnerAccess
 }
