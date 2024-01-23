@@ -14,8 +14,8 @@ const checkUserExist = asyncErrorWrapper(async (req,res,next) => {
 });
 
 const checkArticleExist = asyncErrorWrapper(async (req,res,next) => {
-      const { id } = req.params;
-      const article = await Article.findById(id);
+      const article_id = req.params.id || req.params.article_id
+      const article = await Article.findById(article_id);
       if(!article){
             return next(new CustomError("Yazı bulunamadı", 404));
       }
