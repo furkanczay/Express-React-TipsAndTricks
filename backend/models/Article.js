@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const slugify = require("../helpers/slugify");
 
 const Schema = mongoose.Schema;
 
@@ -10,7 +11,6 @@ const ArticleSchema = new Schema({
       },
       slug: {
             type: String,
-            required: [true, "slug alanı zorunludur"],
             unique: true
       },
       content: {
@@ -27,6 +27,19 @@ const ArticleSchema = new Schema({
             required: [true, "Yazar alanı zorunludur"],
             ref: "User"
       }
-})
+});
+
+ArticleSchema.pre("save", function(next){
+      if(!this.isModified("title")){
+            next();
+      }
+      this.slug = this.slug ? this.slug : this.makeSlug();
+      next();
+});
+
+ArticleSchema.methods.makeSlug = function(){
+      const slug = slugify(this.title);
+      return slug;
+}
 
 module.exports = mongoose.model("Article", ArticleSchema);
