@@ -26,7 +26,13 @@ const ArticleSchema = new Schema({
             type: mongoose.Schema.ObjectId,
             required: [true, "Yazar alanı zorunludur"],
             ref: "User"
-      }
+      },
+      likes: [
+            {
+                  type: mongoose.Schema.ObjectId,
+                  ref: "User"
+            }
+      ]
 });
 
 ArticleSchema.pre("save", function(next){

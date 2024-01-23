@@ -53,6 +53,23 @@ const deleteArticle = asyncErrorWrapper(async (req,res,next) => {
         success: true,
         message: "Yazı başarıyla silindi"
     })
+});
+
+const likeArticle = asyncErrorWrapper(async (req,res,next) => {
+    const { id } = req.params;
+    const article = await Article.findById(id);
+
+    // Kullanıcı beğenmişsse
+    if(article.likes.includes(req.user.id)){
+        return next(new CustomError("Bu yazıyı zaten beğendiniz", 400))
+    }
+    article.likes.push(req.user.id);
+    await article.save();
+    return res.status(200).json({
+        success: true,
+        message: "Beğenme işlemi başarıyla gerçekleşti",
+        data: article
+    })
 })
 
 
@@ -61,5 +78,6 @@ module.exports = {
     newArticle,
     getSingleArticle,
     editArticle,
-    deleteArticle
+    deleteArticle,
+    likeArticle
 }
