@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Article = require("./Article");
 
 const Schema = mongoose.Schema;
 
@@ -29,5 +30,21 @@ const CommentSchema = new Schema({
             ref: "Article"
       }
 });
+
+CommentSchema.pre("save", async function(next){
+      if(!this.isModified("author")){
+            return next();
+      }
+      try{
+            const article = await Article.findById(this.article);
+
+            article.comments.push(this._id);
+
+            await article.save();
+            next();
+      }catch(err){
+            return next(err);
+      }
+})
 
 module.exports = mongoose.model("Comment", CommentSchema);
