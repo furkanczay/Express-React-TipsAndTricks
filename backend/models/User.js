@@ -96,6 +96,7 @@ UserSchema.methods.getResetPasswordTokenFromUser = function(){
     const resetPasswordToken = crypto.createHash("SHA256").update(randomHexString).digest("hex");
     this.resetPasswordToken = resetPasswordToken;
     this.resetPasswordExpire =  Date.now() + parseInt(RESET_PASSWORD_EXPIRE);
+    return resetPasswordToken;
 }
 
 // Pre Hook

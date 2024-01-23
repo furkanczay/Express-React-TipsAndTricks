@@ -3,6 +3,7 @@ const CustomError = require('../helpers/error/customError');
 const asyncErrorWrapper = require('express-async-handler');
 const { sendJwtToClient } = require('../helpers/authorization/tokenHelpers');
 const { validateUserInput, comparePassword } = require('../helpers/input/inputHelpers');
+const sendEmail = require("../helpers/libs/sendEmail");
 const register = asyncErrorWrapper(async (req, res, next) => {
 
     const { firstName, lastName, username , email, password, role } = req.body;
@@ -78,10 +79,33 @@ const forgotPassword = asyncErrorWrapper(async (req, res, next) => {
     const resetPasswordToken = user.getResetPasswordTokenFromUser();
     await user.save();
 
-    res.json({
-        success: true,
-        message: "E-posta adresinize şifre sıfırlama bağlantısı gönderildi"
-    })
+    const resetPasswordUrl = `${process.env.BASE_URL}${process.env.API_PATH}/auth/reset-password?resetPasswordToken=${resetPasswordToken}`
+
+    const emailTemplate = `
+        <h3>Şifreyi Sıfırla</h3>
+        <p> Bu <a href='${resetPasswordUrl}' target='_blank'> bağlantıya </a> tıklayarak, 1 saat içerisinde şifrenizi sıfırlayabilirsiniz </p>
+    `
+
+    try{
+        await sendEmail({
+            from: process.env.SMTP_USER,
+            to: resetEmail,
+            subject: "Şifre Sıfırlama",
+            html: emailTemplate
+        });
+        res.status(200).json({
+            success: true,
+            message: "E-posta adresinize şifre sıfırlama bağlantısı gönderildi"
+        })
+    }catch(err){
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+        await user.save();
+        return next(new CustomError("E-posta gönderimi esnasında hata oluştu", 500))
+    }
+
+    
+    
 });
 
 
