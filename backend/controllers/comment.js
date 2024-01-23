@@ -29,9 +29,27 @@ const getAllCommentsByArticle = asyncErrorWrapper(async (req,res,next) => {
             count: comments.length,
             data: comments
       })
+});
+
+const getSingleComment = asyncErrorWrapper(async (req,res,next) => {
+      const { comment_id } = req.params;
+      const comment = await Comment.findById(comment_id).populate({
+            path: "article",
+            select: "title"
+      }).populate({
+            path: "author",
+            select: "firstName lastName username email profileImage"
+      });
+      return res.status(200).json({
+            success: true,
+            data: comment
+      })
 })
+
+
 
 module.exports = {
       addNewCommentToArticle,
-      getAllCommentsByArticle
+      getAllCommentsByArticle,
+      getSingleComment
 }

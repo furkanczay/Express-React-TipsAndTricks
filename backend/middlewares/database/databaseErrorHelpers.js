@@ -2,6 +2,7 @@ const User = require("../../models/User");
 const CustomError = require('../../helpers/error/CustomError');
 const asyncErrorWrapper = require('express-async-handler');
 const Article = require("../../models/Article");
+const Comment = require("../../models/Comment");
 
 const checkUserExist = asyncErrorWrapper(async (req,res,next) => {
       const { id, username } = req.params;
@@ -21,9 +22,24 @@ const checkArticleExist = asyncErrorWrapper(async (req,res,next) => {
       }
       req.dataArticle = article;
       next();
-})
+});
+
+const checkArticleAndAnswerExist = asyncErrorWrapper(async (req,res,next) => {
+      const article_id = req.params.article_id;
+      const comment_id = req.params.comment_id
+      const comment = await Comment.findOne({
+            _id: comment_id,
+            article: article_id
+      });
+
+      if(!comment){
+            return next(new CustomError("Bu yazıya bağlı böyle bir yorum bulunamadı!", 404));
+      }
+      next();   
+});
 
 module.exports = {
       checkUserExist,
-      checkArticleExist
+      checkArticleExist,
+      checkArticleAndAnswerExist
 }
