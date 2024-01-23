@@ -57,7 +57,21 @@ const editComment = asyncErrorWrapper(async (req,res,next) => {
             message: "Yorum başarıyla güncellendi",
             data: comment
       })
-})
+});
+
+const deleteComment = asyncErrorWrapper(async (req,res,next) => {
+      const { comment_id } = req.params;
+      const { article_id } = req.params;
+      await Comment.findByIdAndDelete(comment_id);
+      const article = await Article.findById(article_id);
+      article.comments.splice(article.comments.indexOf(comment_id), 1);
+      await article.save();
+
+      return res.status(200).json({
+            success: true,
+            message: "Yorum başarıyla silindi"
+      })
+});
 
 
 
@@ -65,5 +79,6 @@ module.exports = {
       addNewCommentToArticle,
       getAllCommentsByArticle,
       getSingleComment,
-      editComment
+      editComment,
+      deleteComment
 }
