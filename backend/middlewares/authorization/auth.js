@@ -40,8 +40,9 @@ const getArticleOwnerAccess = asyncErrorWrapper(async (req,res,next) => {
       const articleId = req.params.id;
 
       const article = await Article.findById(articleId);
+      console.log(article.author, userId);
 
-      if(article.user !== userId){
+      if(article.author != userId){
             return next(new CustomError("Yalnızca yazının sahibi yazıyı düzenleyebilir", 403));
       }
       next();

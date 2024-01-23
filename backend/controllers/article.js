@@ -30,11 +30,26 @@ const newArticle = asyncErrorWrapper(async (req,res,next) => {
         message: "Başarıyla oluşturuldu",
         data: article
     })
+});
+
+const editArticle = asyncErrorWrapper(async (req,res,next) => {
+    const { id } = req.params;
+    const { title, content } = req.body;
+    const article = await Article.findByIdAndUpdate(id, {
+        title, 
+        content
+    }, { new: true, runValidators: true })
+    return res.status(200).json({
+        success: true,
+        message: "Yazı başarıyla güncellendi",
+        data: article
+    })
 })
 
 
 module.exports = {
     getAllArticles,
     newArticle,
-    getSingleArticle
+    getSingleArticle,
+    editArticle
 }
