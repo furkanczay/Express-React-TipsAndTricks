@@ -3,6 +3,7 @@ const CustomError = require('../helpers/error/customError');
 const asyncErrorWrapper = require('express-async-handler');
 const { sendJwtToClient } = require('../helpers/authorization/tokenHelpers');
 const { validateUserInput, comparePassword } = require('../helpers/input/inputHelpers');
+const sendEmail = require("../helpers/libs/sendEmail");
 const register = asyncErrorWrapper(async (req, res, next) => {
 
     const { firstName, lastName, username , email, password, role } = req.body;
@@ -78,9 +79,69 @@ const forgotPassword = asyncErrorWrapper(async (req, res, next) => {
     const resetPasswordToken = user.getResetPasswordTokenFromUser();
     await user.save();
 
-    res.json({
+    const resetPasswordUrl = `${process.env.BASE_URL}${process.env.API_PATH}/auth/reset-password?resetPasswordToken=${resetPasswordToken}`
+
+    const emailTemplate = `
+        <h3>Şifreyi Sıfırla</h3>
+        <p> Bu <a href='${resetPasswordUrl}' target='_blank'> bağlantıya </a> tıklayarak, 1 saat içerisinde şifrenizi sıfırlayabilirsiniz </p>
+    `
+
+    try{
+        await sendEmail({
+            from: process.env.SMTP_USER,
+            to: resetEmail,
+            subject: "Şifre Sıfırlama",
+            html: emailTemplate
+        });
+        res.status(200).json({
+            success: true,
+            message: "E-posta adresinize şifre sıfırlama bağlantısı gönderildi"
+        })
+    }catch(err){
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+        await user.save();
+        return next(new CustomError("E-posta gönderimi esnasında hata oluştu", 500))
+    }  
+});
+
+const resetPassword = asyncErrorWrapper(async (req, res, next) => {
+    const { resetPasswordToken } = req.query;
+
+    const { newPassword } = req.body;
+
+    if(!resetPasswordToken) {
+        return next(new CustomError("Lütfen geçerli bir şifre yenileme anahtarı gönderiniz", 400));
+    }
+
+    let user = await User.findOne({
+        resetPasswordToken,
+        resetPasswordExpire: { $gt: Date.now() }
+    });
+
+    if(!user){
+        return next(new CustomError("Geçersiz şifre yenileme bağlantısı", 400))
+    }
+
+    user.password = newPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    await user.save();
+
+    return res.status(200).json({
         success: true,
-        message: "E-posta adresinize şifre sıfırlama bağlantısı gönderildi"
+        message: "Şifre sıfırlama işlemi başarılı"
+    })
+});
+
+const editDetails = asyncErrorWrapper(async (req,res,next) => {
+    const editInformation = req.body;
+    const user = await User.findByIdAndUpdate(req.user.id, editInformation, { new: true, runValidators: true });
+    return res.status(200).json({
+        success: true,
+        message: "Güncelleme işlemi başarıyla gerçekleşti",
+        data: user
     })
 });
 
@@ -91,5 +152,7 @@ module.exports = {
     login,
     logout,
     imageUpload,
-    forgotPassword
+    forgotPassword,
+    resetPassword,
+    editDetails
 }
