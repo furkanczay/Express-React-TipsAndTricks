@@ -46,10 +46,20 @@ const editArticle = asyncErrorWrapper(async (req,res,next) => {
     })
 })
 
+const deleteArticle = asyncErrorWrapper(async (req,res,next) => {
+    const { id } = req.params;
+    await Article.findByIdAndDelete(id);
+    res.status(200).json({
+        success: true,
+        message: "Yazı başarıyla silindi"
+    })
+})
+
 
 module.exports = {
     getAllArticles,
     newArticle,
     getSingleArticle,
-    editArticle
+    editArticle,
+    deleteArticle
 }
