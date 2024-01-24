@@ -32,13 +32,29 @@ const ArticleSchema = new Schema({
                   type: mongoose.Schema.ObjectId,
                   ref: "User"
             }
-      ],
-      comments: [
-            {
-                  type: mongoose.Schema.ObjectId,
-                  ref: "Comment"
-            }
       ]
+},
+{ toJSON: { virtuals: true }, toObject: { virtuals: true } });
+
+ArticleSchema.virtual("comments_count", {
+      ref: "Comment",
+      count: true,
+      justOne: false,
+      localField: "_id",
+      foreignField: "article"
+});
+
+ArticleSchema.virtual("comments", {
+      ref: "Comment",
+      justOne: false,
+      localField: "_id",
+      foreignField: "article"
+});
+
+ArticleSchema.pre("find", function(next){
+      console.log('Çalıştı');
+      this.populate("comments_count");
+      next();
 });
 
 ArticleSchema.pre("save", function(next){

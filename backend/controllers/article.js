@@ -4,7 +4,7 @@ const asyncErrorWrapper = require('express-async-handler');
 
 const getAllArticles = asyncErrorWrapper(async (req,res,next) => {
     console.log(req.query.search);
-    let query = Article.find();
+    let query = Article.find()
     const populate = true;
     const populateObj = {
         path: "author",
@@ -21,7 +21,10 @@ const getAllArticles = asyncErrorWrapper(async (req,res,next) => {
 
     // Populate
     if(populate){
-        query = query.populate(populateObj)
+        query = query.populate(populateObj).populate({
+            path: "comments",
+            select: "_id -article"
+        })
     }
 
     // Sayfalama

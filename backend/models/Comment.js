@@ -31,20 +31,4 @@ const CommentSchema = new Schema({
       }
 });
 
-CommentSchema.pre("save", async function(next){
-      if(!this.isModified("author")){
-            return next();
-      }
-      try{
-            const article = await Article.findById(this.article);
-
-            article.comments.push(this._id);
-
-            await article.save();
-            next();
-      }catch(err){
-            return next(err);
-      }
-})
-
 module.exports = mongoose.model("Comment", CommentSchema);
