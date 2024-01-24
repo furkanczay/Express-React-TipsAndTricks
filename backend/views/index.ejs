@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+      <style>
+            body {
+                  font-family: 'Arial', sans-serif;
+                  line-height: 1.6;
+                  margin: 20px;
+            }
+
+            h1, h3, h4 {
+                  color: #333;
+            }
+
+            code {
+                  background-color: #f4f4f4;
+                  padding: 2px 5px;
+                  border: 1px solid #ccc;
+                  border-radius: 4px;
+            }
+
+            b {
+                  font-weight: bold;
+            }
+
+            p {
+                  margin-bottom: 10px;
+            }
+
+                  /* Auth Endpoints styling */
+            h1 {
+                  border-bottom: 2px solid #333;
+                  padding-bottom: 10px;
+            }
+
+                  h3, h4 {
+                  color: #007bff;
+            }
+
+                  /* Endpoint details styling */
+            code, b {
+                  color: #dc3545;
+            }
+
+                  /* Highlight headers */
+            h4 {
+                  background-color: #f8f9fa;
+                  padding: 5px;
+                  margin-top: 30px;
+            }
+
+                  /* Parameters styling */
+            p {
+                  margin-top: 5px;
+            }
+
+                  /* Authorization header styling */
+            p b.post {
+                  color: #ae8621;
+            }
+
+            p b.get{
+                  color:rgb(49, 117, 34);
+            }
+
+            p b.put{
+                  color:rgb(23, 32, 114);
+            }
+            p b.del{
+                  color:rgb(117, 6, 6);
+            }
+
+      </style>
+</head>
+<body>
+      <h1>API Dökümantasyonu</h1>
+      <h3>Auth Endpoints</h3>
+      <h4>Kayıt Ol</h4>
+      <p><b class="post">POST</b> - <code><%= BASE_URL %><%= API_PATH %>/auth/register</code></p>
+      <b>Kalın yazılan parametreler zorunludur!</b>
+      <p>Body Parameters: { <b>firstName, lastName, username, email, password</b> }</p>
+      <h4>Giriş Yap</h4>
+      <p><b class="post">POST</b> - <code><%= BASE_URL %><%= API_PATH %>/auth/login</code></p>
+      <b>Kalın yazılan parametreler zorunludur!</b>
+      <p>Body Parameters: { <b>email, password</b> }</p>
+      <h4>Çıkış Yap</h4>
+      <p><b class="post">POST</b> - <code><%= BASE_URL %><%= API_PATH %>/auth/logout</code></p>
+      <b>Kalın yazılan parametreler zorunludur!</b>
+      <p>Header Parameters: { <b>Authorization: Bearer [accessToken]</b> }</p>
+      <h4>Giriş Yapmış Kullanıcının Bilgilerini Getir</h4>
+      <p><b class="get">GET</b> - <code><%= BASE_URL %><%= API_PATH %>/auth/profile</code></p>
+      <b>Kalın yazılan parametreler zorunludur!</b>
+      <p>Header Parameters: { <b>Authorization: Bearer [accessToken]</b> }</p>
+      <h4>Profil Resmi Yükle</h4>
+      <p><b class="post">POST</b> - <code><%= BASE_URL %><%= API_PATH %>/auth/upload</code></p>
+      <b>Kalın yazılan parametreler zorunludur!</b>
+      <p>Header Parameters: { <b>Authorization: Bearer [accessToken]</b> }</p>
+      <p>Body Parameters: { <b>profile_image</b> }</p>
+      <h4>Şifremi Unuttum - Şifre Değiştirme Talebi</h4>
+      <p><b class="post">POST</b> - <code><%= BASE_URL %><%= API_PATH %>/auth/forgot-password</code></p>
+      <b>Kalın yazılan parametreler zorunludur!</b>
+      <p>Body Parameters: { <b>email</b> }</p>
+      <h4>Şifremi Unuttum - Şifre değiştirme işlemi</h4>
+      <p><b class="put">PUT</b> - <code><%= BASE_URL %><%= API_PATH %>/auth/reset-password</code></p>
+      <b>Kalın yazılan parametreler zorunludur!</b>
+      <p>Query Parameters: { <b>resetPasswordToken=??</b> }</p>
+      <h4>Profili Güncelle</h4>
+      <p><b class="put">PUT</b> - <code><%= BASE_URL %><%= API_PATH %>/auth/edit</code></p>
+      <b>Kalın yazılan parametreler zorunludur!</b>
+      <p>Body Parameters: { title, about, place, website }</p>
+
+      <h3>User Endpoints</h3>
+      <h4>Bütün Kullanıcıları Getir</h4>
+      <p><b class="get">GET</b> - <code><%= BASE_URL %><%= API_PATH %>/users</code></p>
+      <h4>ID'ye göre kullanıcı getir</h4>
+      <p><b class="get">GET</b> - <code><%= BASE_URL %><%= API_PATH %>/users/{id}</code></p>
+      <h4>Kullanıcı adına göre kullanıcı getir</h4>
+      <p><b class="get">GET</b> - <code><%= BASE_URL %><%= API_PATH %>/users/u/{username}</code></p>
+
+      <h3>Admin Endpoints</h3>
+      <h4>Bir Kullanıcıyı Engelle(Block)</h4>
+      <p><b class="get">GET</b> - <code><%= BASE_URL %><%= API_PATH %>/admin/user/block/{userId}</code></p>
+      <b>Kalın yazılan parametreler zorunludur!</b>
+      <p>Header Parameters: { <b>Authorization: Bearer [accessToken]</b> }</p>
+      <h4>Bir Kullanıcıyı Silme</h4>
+      <p><b class="del">DEL</b> - <code><%= BASE_URL %><%= API_PATH %>/admin/user/delete/{userId}</code></p>
+      <b>Kalın yazılan parametreler zorunludur!</b>
+      <p>Header Parameters: { <b>Authorization: Bearer [accessToken]</b> }</p>
+
+      <h3>Article Endpoints</h3>
+      <h4>Yazı Oluştur</h4>
+      <p><b class="post">POST</b> - <code><%= BASE_URL %><%= API_PATH %>/articles/new</code></p>
+      <b>Kalın yazılan parametreler zorunludur!</b>
+      <p>Header Parameters: { <b>Authorization: Bearer [accessToken]</b> }</p>
+      <p>Body Parameters: { <b>title, content,</b> slug }</p>
+      <h4>Tüm Yazıları Getir</h4>
+      <p><b class="get">GET</b> - <code><%= BASE_URL %><%= API_PATH %>/articles</code></p>
+      <h4>ID'ye Göre Yazı Getir</h4>
+      <p><b class="get">GET</b> - <code><%= BASE_URL %><%= API_PATH %>/articles/{id}</code></p>
+      <h4>Yazıyı Düzenle</h4>
+      <p><b class="put">PUT</b> - <code><%= BASE_URL %><%= API_PATH %>/articles/{id}/edit</code></p>
+      <p>Header Parameters: { <b>Authorization: Bearer [accessToken]</b> }</p>
+      <p>Body Parameters: { title, content }</p>
+      <h4>Yazıyı Sil</h4>
+      <p><b class="del">DEL</b> - <code><%= BASE_URL %><%= API_PATH %>/articles/{id}/delete</code></p>
+      <p>Header Parameters: { <b>Authorization: Bearer [accessToken]</b> }</p>
+      <h4>Bir Yazıyı Beğen</h4>
+      <p><b class="get">GET</b> - <code><%= BASE_URL %><%= API_PATH %>/articles/{id}/like</code></p>
+      <p>Header Parameters: { <b>Authorization: Bearer [accessToken]</b> }</p>
+      <h4>Bir Yazıdan Beğeniyi Geri Çek</h4>
+      <p><b class="get">GET</b> - <code><%= BASE_URL %><%= API_PATH %>/articles/{id}/undo-like</code></p>
+      <p>Header Parameters: { <b>Authorization: Bearer [accessToken]</b> }</p>
+
+      <h3>Comment Endpoints</h3>
+      <h4>Bir Yazıya Yorum Ekle</h4>
+      <p><b class="post">POST</b> - <code><%= BASE_URL %><%= API_PATH %>/articles/{id}/comments</code></p>
+      <p>Header Parameters: { <b>Authorization: Bearer [accessToken]</b> }</p>
+      <p>Body Parameters: { <b>content</b> }</p>
+      <h4>Bir Yazının Tüm Yorumlarını Getir</h4>
+      <p><b class="get">GET</b> - <code><%= BASE_URL %><%= API_PATH %>/articles/{id}/comments</code></p>
+      <h4>Bir Yazının Tek Bir Yorumunu Getir</h4>
+      <p><b class="get">GET</b> - <code><%= BASE_URL %><%= API_PATH %>/articles/{articleId}/comments/{commentId}</code></p>
+      <h4>Bir Yazının Yorumunu Düzenle</h4>
+      <p><b class="put">PUT</b> - <code><%= BASE_URL %><%= API_PATH %>/articles/{articleId}/comments/{commentId}/edit</code></p>
+      <p>Header Parameters: { <b>Authorization: Bearer [accessToken]</b> }</p>
+      <p>Body Parameters: { <b>content</b> }</p>
+      <h4>Bir Yazının Yorumunu Silme</h4>
+      <p><b class="del">DEL</b> - <code><%= BASE_URL %><%= API_PATH %>/articles/{articleId}/comments/{commentId}/delete</code></p>
+      <p>Header Parameters: { <b>Authorization: Bearer [accessToken]</b> }</p>
+</body>
+</html>
