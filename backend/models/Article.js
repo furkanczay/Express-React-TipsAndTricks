@@ -32,11 +32,15 @@ const ArticleSchema = new Schema({
                   type: mongoose.Schema.ObjectId,
                   ref: "User"
             }
-      ]
+      ],
+      likesCount:{
+            type: Number,
+            default: 0
+      }
 },
 { toJSON: { virtuals: true }, toObject: { virtuals: true } });
 
-ArticleSchema.virtual("comments_count", {
+ArticleSchema.virtual("commentsCount", {
       ref: "Comment",
       count: true,
       justOne: false,
@@ -53,7 +57,7 @@ ArticleSchema.virtual("comments", {
 
 ArticleSchema.pre("find", function(next){
       console.log('Çalıştı');
-      this.populate("comments_count");
+      this.populate("commentsCount");
       next();
 });
 

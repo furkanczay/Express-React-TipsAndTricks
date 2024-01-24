@@ -23,7 +23,11 @@ const getAllArticles = asyncErrorWrapper(async (req,res,next) => {
     if(populate){
         query = query.populate(populateObj).populate({
             path: "comments",
-            select: "_id -article"
+            select: "_id author -article",
+            populate: {
+                path: "author",
+                select: "firstName lastName email username profileImage"
+            }
         })
     }
 
@@ -116,6 +120,7 @@ const likeArticle = asyncErrorWrapper(async (req,res,next) => {
         return next(new CustomError("Bu yazıyı zaten beğendiniz", 400))
     }
     article.likes.push(req.user.id);
+    article.likesCount = article.likes.length;
     await article.save();
     return res.status(200).json({
         success: true,
@@ -134,6 +139,7 @@ const undoLikeArticle = asyncErrorWrapper(async (req,res,next) => {
     }
     const index = article.likes.indexOf(req.user.id)
     article.likes.splice(req.user.id, 1);
+    article.likesCount = article.likes.length;
     await article.save();
     return res.status(200).json({
         success: true,
