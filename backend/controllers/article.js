@@ -138,7 +138,7 @@ const undoLikeArticle = asyncErrorWrapper(async (req,res,next) => {
         return next(new CustomError("Bu yazıyı beğenmediniz", 400))
     }
     const index = article.likes.indexOf(req.user.id)
-    article.likes.splice(req.user.id, 1);
+    article.likes.splice(index, 1);
     article.likesCount = article.likes.length;
     await article.save();
     return res.status(200).json({
