@@ -3,9 +3,16 @@ const comment = require("./comment");
 const { getAllArticles, newArticle, getSingleArticle, editArticle, deleteArticle, likeArticle, undoLikeArticle } = require("../controllers/article");
 const { getAccessToRoute, getArticleOwnerAccess } = require("../middlewares/authorization/auth");
 const { checkArticleExist } = require("../middlewares/database/databaseErrorHelpers");
+const articleQueryMiddleware = require("../middlewares/query/articleQueryMiddleware");
+const Article = require("../models/Article");
 const router = express.Router();
 
-router.get("/", getAllArticles)
+router.get("/", articleQueryMiddleware(Article, {
+      population: {
+            path: "author",
+            select: "firstName lastName profileImage username, email"
+      }
+}), getAllArticles)
 router.post("/new", getAccessToRoute, newArticle);
 router.get("/:id", checkArticleExist, getSingleArticle);
 router.put("/:id/edit", [getAccessToRoute, checkArticleExist, getArticleOwnerAccess], editArticle);
