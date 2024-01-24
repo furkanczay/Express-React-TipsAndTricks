@@ -3,11 +3,7 @@ const CustomError = require('../helpers/error/customError');
 const asyncErrorWrapper = require('express-async-handler');
 
 const getAllUsers = asyncErrorWrapper(async (req,res,next) => {
-      const users = await User.find();
-      return res.status(200).json({
-            success: true,
-            data: users
-      })
+      return res.status(200).json(res.queryResults)
 })
 
 const getSingleUserById = asyncErrorWrapper(async (req,res,next) => {
