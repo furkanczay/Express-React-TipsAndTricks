@@ -1,20 +1,18 @@
 const asyncErrorWrapper = require("express-async-handler");
-const { searchHelper, populateHelper, articleSortHelper, paginationHelper } = require("./queryMiddlewareHelpers");
-const articleQueryMiddleware = function(model, options){
+const { searchHelper, paginationHelper, populateHelper } = require("./queryMiddlewareHelpers");
+
+const commentQueryMiddleware = function(model, options){
       return asyncErrorWrapper(async function(req,res,next){
             // Initial Query
             let query = model.find();
 
             //Search
-            query = searchHelper("title", query, req);
+            query = searchHelper("author", query, req);
 
             // Populate
             if(options && options.population){
                   query = populateHelper(query, options.population);
             }
-
-            // Sort
-            query = articleSortHelper(query, req);
 
             // Pagination
 
@@ -31,6 +29,6 @@ const articleQueryMiddleware = function(model, options){
             };
             next();
       })
-}
+};
 
-module.exports = articleQueryMiddleware;
+module.exports = commentQueryMiddleware;

@@ -21,14 +21,7 @@ const addNewCommentToArticle = asyncErrorWrapper(async (req,res,next) => {
 });
 
 const getAllCommentsByArticle = asyncErrorWrapper(async (req,res,next) => {
-      const { article_id } = req.params;
-      const article = await Article.findById(article_id).populate("comments");
-      const comments = article.comments
-      return res.status(200).json({
-            success: true,
-            count: comments.length,
-            data: comments
-      })
+      return res.status(200).json(res.queryResults)
 });
 
 const getSingleComment = asyncErrorWrapper(async (req,res,next) => {

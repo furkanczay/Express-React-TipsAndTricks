@@ -56,7 +56,10 @@ ArticleSchema.virtual("comments", {
 });
 
 ArticleSchema.pre("find", function(next){
-      console.log('Çalıştı');
+      this.populate("commentsCount");
+      next();
+});
+ArticleSchema.pre("findOne", function(next){
       this.populate("commentsCount");
       next();
 });
