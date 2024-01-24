@@ -3,9 +3,58 @@ const CustomError = require('../helpers/error/customError');
 const asyncErrorWrapper = require('express-async-handler');
 
 const getAllArticles = asyncErrorWrapper(async (req,res,next) => {
-    const articles = await Article.find();
+    console.log(req.query.search);
+    let query = Article.find();
+    const populate = true;
+    const populateObj = {
+        path: "author",
+        select: "username email profileImage firstName lastName"
+    }
+    // Search
+    if(req.query.search){
+        const searchObj = {};
+        // Başlığa göre sorgula - searhValue
+        const regex = new RegExp(req.query.search, "i");
+        searchObj["title"] = regex;
+        query = query.where(searchObj);
+    }
+
+    // Populate
+    if(populate){
+        query = query.populate(populateObj)
+    }
+
+    // Sayfalama
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const startIndex = ((page - 1) * limit);
+    const endIndex = page * limit;
+
+    const pagination = {};
+    const total = await Article.countDocuments();
+
+    if(startIndex > 0) {
+        pagination.prev = {
+            page: page - 1,
+            limit: limit,
+        }
+    }
+    if(endIndex < total){
+        pagination.next = {
+            page: page + 1,
+            limit: limit
+        }
+    }
+    query = query.skip(startIndex).limit(limit);
+    // Mongoose - skip metodu skip(0) -- skip(2)
+    // Mongoose - limit(2)
+
+    const articles = await query;
+    //const articles = await Article.find().where({ title: "Articles 3 - Title" });
     return res.status(200).json({
         success: true,
+        count: articles.length,
+        pagination: pagination,
         data: articles
     })
 })
