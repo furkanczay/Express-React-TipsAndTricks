@@ -25,7 +25,7 @@ const articleSortHelper = (query, req) => {
 
 const paginationHelper = async (model,query,req) => {
       const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 5;
+      const limit = parseInt(req.query.limit) || parseInt(process.env.DEFAULT_PAGINATION_LIMIT);
       const startIndex = ((page - 1) * limit);
       const endIndex = page * limit;
 
