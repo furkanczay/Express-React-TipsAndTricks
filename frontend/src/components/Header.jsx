@@ -11,11 +11,9 @@ export default function Header() {
                 <Link to='#' className='navs'>Hakkımızda</Link>
                 <Link to='#' className='navs'>İletişim</Link>
             </div>
-            <div className="logSign">
-                <Link to='#' className='logIn'>Giriş Yap</Link>
-                <Link to='#' className='signUp'>Üye Ol</Link>
+            <div className="login">
+                <Link to='/signInUp' className='logIn'>signIn/Up</Link>
             </div>
-
         </header>
     )
 }
