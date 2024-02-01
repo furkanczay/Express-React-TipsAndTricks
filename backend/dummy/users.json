@@ -1,0 +1,42 @@
+[
+      {
+            "_id": "5e30275d141401679e3832a1",
+            "firstName": "John",
+            "lastName": "Doe",
+            "username": "johndoe",
+            "email": "johndoe@gmail.com",
+            "password": "Test123!"
+      },
+      {
+            "_id": "5e2866280427c1ff0dd2b5cb",
+            "firstName": "Terry",
+            "lastName": "Medhurst",
+            "email": "atuny0@sohu.com",
+            "username": "atuny0",
+            "password": "9uQF!F1Lh"
+      },
+      {
+            "_id": "5e300f0ffbb6b05ee9037fd2",
+            "firstName": "Sheldon",
+            "lastName": "Quigley",
+            "email": "hbingley1@plala.or.jp",
+            "username": "hbingley1",
+            "password": "CQutx25!i8r"
+      },
+      {
+            "_id": "5e2effcccbdf585842cdb6ce",
+            "firstName": "Terrill",
+            "lastName": "Hills",
+            "email": "rshawe2@51.la",
+            "username": "rshaS!we2",
+            "password": "OWsT5bMU!gFc"
+      },
+      {
+            "_id": "5e302931752a052e11096e96",
+            "firstName": "Miles",
+            "lastName": "Cummerata",
+            "email": "yraigatt3@nature.com",
+            "username": "yraigatt3",
+            "password": "sRQxjPf2dS!"
+      }
+]

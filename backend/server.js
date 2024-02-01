@@ -19,6 +19,11 @@ app.use(express.json())
 const PORT = process.env.PORT || 3000;
 // Routes Middleware
 app.use("/api", routes);
+app.set('views', './views')
+app.set('view engine', 'ejs')
+app.get("/", (req,res) => {
+    res.render("index", {BASE_URL: process.env.BASE_URL, API_PATH: process.env.API_PATH});
+})
 
 
 // Error Handling

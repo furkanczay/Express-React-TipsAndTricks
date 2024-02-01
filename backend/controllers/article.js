@@ -3,11 +3,7 @@ const CustomError = require('../helpers/error/customError');
 const asyncErrorWrapper = require('express-async-handler');
 
 const getAllArticles = asyncErrorWrapper(async (req,res,next) => {
-    const articles = await Article.find();
-    return res.status(200).json({
-        success: true,
-        data: articles
-    })
+    return res.status(200).json(res.queryResults)
 })
 
 const getSingleArticle = asyncErrorWrapper(async (req,res,next) => {
@@ -64,6 +60,7 @@ const likeArticle = asyncErrorWrapper(async (req,res,next) => {
         return next(new CustomError("Bu yazıyı zaten beğendiniz", 400))
     }
     article.likes.push(req.user.id);
+    article.likesCount = article.likes.length;
     await article.save();
     return res.status(200).json({
         success: true,
@@ -81,7 +78,8 @@ const undoLikeArticle = asyncErrorWrapper(async (req,res,next) => {
         return next(new CustomError("Bu yazıyı beğenmediniz", 400))
     }
     const index = article.likes.indexOf(req.user.id)
-    article.likes.splice(req.user.id, 1);
+    article.likes.splice(index, 1);
+    article.likesCount = article.likes.length;
     await article.save();
     return res.status(200).json({
         success: true,
