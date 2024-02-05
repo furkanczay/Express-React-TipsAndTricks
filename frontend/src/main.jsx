@@ -9,6 +9,7 @@ import MainLayout from './layout/Mainlayout.jsx';
 import HomePage from './pages/HomePage.jsx';
 import ArticleDetail from './pages/ArticlesDetail.jsx';
 import SignInUp from './pages/SignInUp.jsx';
+import { loader } from './pages/HomePage.jsx';
 
 const router = createBrowserRouter([
     {
@@ -17,7 +18,8 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <HomePage />
+                element: <HomePage />,
+                loader: loader
             },
             {
                 path: 'detail',
