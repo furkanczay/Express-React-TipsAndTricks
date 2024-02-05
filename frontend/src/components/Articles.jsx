@@ -6,7 +6,7 @@ export default function Articles({ filteredData }) {
 
 
     // console.log(filteredData.forEach((item) => console.log(item.comments_count)))
-    console.log(filteredData)
+    // console.log(filteredData)
 
     return (
         <>
@@ -21,7 +21,7 @@ export default function Articles({ filteredData }) {
                                 } */}
                             </div>
                             <div className="tipsAndTricks">
-                                {/* <h3><Link href={`/${data.slug}`}>{data.title}</Link></h3> */}
+                                <h3><Link to={`/${data.id}`}>{data.title}</Link></h3>
                                 <p>{data.content}</p>
                                 <div className="category">
                                     {data.categories && data.categories.map((category, index) => (
